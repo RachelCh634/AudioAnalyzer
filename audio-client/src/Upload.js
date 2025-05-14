@@ -1,7 +1,6 @@
-                                        import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import {
-    TextField,
     Button,
     Box,
     Typography,
@@ -133,7 +132,6 @@ const Upload = () => {
         scrollToBottom();
     }, [messages]);
 
-    // Cleanup interval on unmount
     useEffect(() => {
         return () => {
             if (progressInterval.current) {
@@ -147,10 +145,7 @@ const Upload = () => {
         if (selectedFile) {
             setFile(selectedFile);
             addMessage(`Selected file: ${selectedFile.name}`, 'user');
-            
-            // Estimate processing time based on file size (rough estimate)
             const fileSizeInMB = selectedFile.size / (1024 * 1024);
-            // Assume 10 seconds per MB as a rough estimate for processing time
             const estimatedSeconds = Math.max(10, Math.round(fileSizeInMB * 10));
             setEstimatedTotalTime(estimatedSeconds);
         }
@@ -163,7 +158,6 @@ const Upload = () => {
     const updateProgressBar = () => {
         setProcessingTime(prev => {
             const newTime = prev + 1;
-            // Calculate progress percentage based on estimated total time
             const newProgress = Math.min(95, Math.round((newTime / estimatedTotalTime) * 100));
             setProgress(newProgress);
             return newTime;
@@ -171,9 +165,7 @@ const Upload = () => {
     };
 
     const resetFileInput = () => {
-        // Reset file state
         setFile(null);
-        // Reset file input element
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
         }
@@ -190,7 +182,6 @@ const Upload = () => {
         setProcessingTime(0);
         addMessage('Processing your file...', 'bot');
 
-        // Start progress simulation
         progressInterval.current = setInterval(updateProgressBar, 1000);
 
         const formData = new FormData();
@@ -202,21 +193,18 @@ const Upload = () => {
                     'Content-Type': 'multipart/form-data'
                 }
             });
-            
-            // Clear the interval when response is received
+
             clearInterval(progressInterval.current);
             setProgress(100);
-            
+
             console.log('Response from server:', response.data);
             setResult(response.data.transcript);
             addMessage('Analysis completed successfully!', 'bot');
             addMessage(`Transcript: ${response.data.transcript}`, 'bot');
             addMessage(`Estimated number of speakers: ${response.data.num_speakers}`, 'bot');
-            
-            // Reset file after successful transcription
+
             resetFileInput();
         } catch (error) {
-            // Clear the interval on error
             clearInterval(progressInterval.current);
             console.error('Error uploading file:', error);
             addMessage('An error occurred while processing the file. Please try again.', 'bot');
@@ -228,7 +216,6 @@ const Upload = () => {
     return (
         <>
             <AudioWaveBackground />
-
             <Container maxWidth="sm" sx={{ py: 4 }}>
                 <Box
                     sx={{
@@ -397,11 +384,11 @@ const Upload = () => {
                                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1 }}>
                                     <CircularProgress size={40} sx={{ color: '#00b8d4' }} />
                                 </Box>
-                                
-                                <LinearProgress 
-                                    variant="determinate" 
-                                    value={progress} 
-                                    sx={{ 
+
+                                <LinearProgress
+                                    variant="determinate"
+                                    value={progress}
+                                    sx={{
                                         height: 8,
 
                                         borderRadius: 4,
@@ -410,13 +397,13 @@ const Upload = () => {
                                             backgroundColor: '#00b8d4',
                                             borderRadius: 4,
                                         }
-                                    }} 
+                                    }}
                                 />
-                                
-                                <Typography 
-                                    variant="body2" 
-                                    sx={{ 
-                                        textAlign: 'center', 
+
+                                <Typography
+                                    variant="body2"
+                                    sx={{
+                                        textAlign: 'center',
                                         color: '#555',
                                         mt: 0.5,
                                         fontStyle: 'italic',
@@ -425,11 +412,11 @@ const Upload = () => {
                                 >
                                     Processing audio... {progress}%
                                 </Typography>
-                                
-                                <Typography 
-                                    variant="body2" 
-                                    sx={{ 
-                                        textAlign: 'center', 
+
+                                <Typography
+                                    variant="body2"
+                                    sx={{
+                                        textAlign: 'center',
                                         color: '#777',
                                         fontSize: '0.8rem'
                                     }}
