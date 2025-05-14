@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+                                        import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import {
     TextField,
@@ -123,6 +123,7 @@ const Upload = () => {
     ]);
     const messagesEndRef = useRef(null);
     const progressInterval = useRef(null);
+    const fileInputRef = useRef(null);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -169,6 +170,15 @@ const Upload = () => {
         });
     };
 
+    const resetFileInput = () => {
+        // Reset file state
+        setFile(null);
+        // Reset file input element
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+    };
+
     const handleUpload = async () => {
         if (!file) {
             addMessage('Please select a file first', 'bot');
@@ -202,6 +212,9 @@ const Upload = () => {
             addMessage('Analysis completed successfully!', 'bot');
             addMessage(`Transcript: ${response.data.transcript}`, 'bot');
             addMessage(`Estimated number of speakers: ${response.data.num_speakers}`, 'bot');
+            
+            // Reset file after successful transcription
+            resetFileInput();
         } catch (error) {
             // Clear the interval on error
             clearInterval(progressInterval.current);
@@ -389,7 +402,8 @@ const Upload = () => {
                                     variant="determinate" 
                                     value={progress} 
                                     sx={{ 
-                                        height: 8, 
+                                        height: 8,
+
                                         borderRadius: 4,
                                         backgroundColor: 'rgba(0, 184, 212, 0.2)',
                                         '& .MuiLinearProgress-bar': {
@@ -440,10 +454,11 @@ const Upload = () => {
                             component="label"
                             variant="outlined"
                             startIcon={<CloudUploadIcon />}
+                            disabled={loading}
                             sx={{
                                 borderRadius: '24px',
-                                borderColor: '#00838f',
-                                color: '#00838f',
+                                borderColor: loading ? 'rgba(0, 131, 143, 0.5)' : '#00838f',
+                                color: loading ? 'rgba(0, 131, 143, 0.5)' : '#00838f',
                                 height: '44px',
                                 textTransform: 'none',
                                 fontWeight: 300,
@@ -451,16 +466,18 @@ const Upload = () => {
                                 fontSize: '15px',
                                 boxShadow: 'none',
                                 '&:hover': {
-                                    borderColor: '#006064',
-                                    backgroundColor: 'rgba(0, 131, 143, 0.05)',
+                                    borderColor: loading ? 'rgba(0, 131, 143, 0.5)' : '#006064',
+                                    backgroundColor: loading ? 'transparent' : 'rgba(0, 131, 143, 0.05)',
                                 },
                             }}
                         >
                             Select File
                             <VisuallyHiddenInput
+                                ref={fileInputRef}
                                 type="file"
                                 accept=".mp3,.wav"
                                 onChange={handleFileChange}
+                                disabled={loading}
                             />
                         </Button>
 
@@ -474,9 +491,9 @@ const Upload = () => {
                                 flexGrow: 1,
                                 height: '44px',
                                 borderRadius: '24px',
-                                backgroundColor: '#26c6da',
+                                backgroundColor: !file || loading ? 'rgba(38, 198, 218, 0.6)' : '#26c6da',
                                 '&:hover': {
-                                    backgroundColor: '#00acc1',
+                                    backgroundColor: !file || loading ? 'rgba(38, 198, 218, 0.6)' : '#00acc1',
                                 },
                                 transition: 'all 0.2s ease-in-out',
                                 boxShadow: 'none',

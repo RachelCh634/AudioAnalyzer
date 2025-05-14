@@ -1,27 +1,25 @@
-# 🎧 Speaker Diarization and Transcription System (Flask + React)
+## 🎧 Speaker Diarization and Transcription System (Flask + React)
 
 This project consists of:
 - **Flask server (Python)** that receives audio files, converts and transcribes them using VOSK, and estimates the number of speakers.
 - **React client** that lets users upload audio files and view transcription and speaker count.
 
 ---
-
-## 🗂️ Folder Structure
+### 🗂️ Folder Structure
+```markdown
 project-root/
 ├── server/
-│ ├── app.py
-│ ├── requirements.txt
-│ └── models/
-│ ├── vosk-model-en-us-0.22/
-│ └── vosk-model-spk-0.4/
+│   ├── app.py
+│   ├── requirements.txt
+│   └── models/
+│       ├── vosk-model-en-us-0.22/
+│       └── vosk-model-spk-0.4/
 ├── client/
-│ ├── package.json
-│ ├── public/
-│ └── src/
+│   ├── package.json
+│   ├── public/
+│   └── src/
 └── README.md
-
-
----
+```
 
 ## 🔧 Setup & Run Instructions
 
@@ -42,13 +40,10 @@ pip install -r requirements.txt
 #### Run the server:
 
 Download VOSK Models:
-Download from: https://alphacephei.com/vosk/models
-
-Place models inside server/models/:
-
-vosk-model-en-us-0.22
-
-vosk-model-spk-0.4 
+- Download from: https://alphacephei.com/vosk/models
+- Place models inside server/models/:
+   #### vosk-model-en-us-0.22
+   #### vosk-model-spk-0.4 
 
 Run server:
 ```bash
@@ -74,13 +69,11 @@ Client will run on http://localhost:3000.
 Make sure the React app sends API requests to http://localhost:5000/analyze, or use a proxy in package.json.
 
 
-📤 API - Upload Audio File
+### 📤 API - Upload Audio File
 
-Endpoint: POST /analyze
-
-Content-Type: multipart/form-data
-
-Required field: file (MP3 or WAV file)
+- Endpoint: POST /analyze
+- Content-Type: multipart/form-data
+- Required field: file (MP3 or WAV file)
 
 Response:
 
@@ -93,12 +86,10 @@ Response:
 }
 ```
 
-📋 Notes
-Audio is automatically converted to mono and 16kHz.
-
-If speaker model is not found, the response will default to 1 speaker.
-
-Temporary WAV files are deleted after processing.
+### 📋 Notes
+- Audio is automatically converted to mono and 16kHz.
+- If speaker model is not found, the response will default to 1 speaker.
+- Temporary WAV files are deleted after processing.
 
 ---
 
