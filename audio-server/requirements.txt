@@ -1,0 +1,6 @@
+Flask
+flask-cors
+pydub
+vosk
+scikit-learn
+numpy
